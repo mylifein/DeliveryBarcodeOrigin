@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.chenbro.deliverybarcode</groupId>
+    <artifactId>common-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>delivery-model</module>
+        <module>delivery-dao</module>
+        <module>delivery-utils</module>
+        <module>delivery-dao</module>
+        <module>delivery-service</module>
+        <module>delivery-manager</module>
+        <module>delivery-api</module>
+    </modules>
+
+    <!-- 父工程  -pom  -->
+    <packaging>pom</packaging>
+
+    <!-- 公共的版本号管理  -->
+    <properties>
+        <junit.version>4.11</junit.version>
+        <spring.version>4.3.14.RELEASE</spring.version>
+        <mybatis.version>3.4.1</mybatis.version>
+        <mybatis-spring.version>1.3.1</mybatis-spring.version>
+        <log4j.version>1.2.17</log4j.version>
+        <slf4j.version>1.7.12</slf4j.version>
+        <jstl.version>1.2</jstl.version>
+        <taglibs.version>1.1.2</taglibs.version>
+        <c3p0.version>0.9.5.2</c3p0.version>
+        <mysql.version>5.1.6</mysql.version>                <!--  注意数据库驱动与数据库版本 -->
+        <mybatis-pagehelper.version>5.1.4</mybatis-pagehelper.version>
+        <servlet-api.version>3.1.0</servlet-api.version>
+        <servlet-jsp.version>2.3.1</servlet-jsp.version>
+        <jackson.version>2.5.4</jackson.version>
+        <shiro.version>1.4.0</shiro.version>
+        <ehcache.version>2.10.3</ehcache.version>
+        <spring-Test.version>5.0.7.RELEASE</spring-Test.version>
+        <commons-io.version>2.6</commons-io.version>
+        <activiti.version>7.0.0.Beta1</activiti.version>
+        <aspectj.version>1.5.4</aspectj.version>
+        <jwt.version>0.6.0</jwt.version>
+    </properties>
+
+    <!-- 公共依赖 -->
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring-Test.version}</version>
+        </dependency>
+    </dependencies>
+</project>

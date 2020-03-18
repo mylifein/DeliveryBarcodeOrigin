@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.3.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-4.3xsd">
+
+    <context:property-placeholder location="classpath:db.properties"/>
+
+
+    <!-- 配置数据源-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxPoolSize" value="30"/>
+        <property name="minPoolSize" value="2"/>
+    </bean>
+
+<!--    &lt;!&ndash; Shiro 核心组件 &ndash;&gt;-->
+<!--    &lt;!&ndash;  1. 配置securityManager &ndash;&gt;-->
+<!--    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">-->
+<!--        &lt;!&ndash;   配置缓存配置  &ndash;&gt;-->
+<!--        <property name="cacheManager" ref="cacheManger"/>-->
+<!--        <property name="realm" ref="jdbcRealm"/>-->
+<!--    </bean>-->
+
+<!--    &lt;!&ndash;  2 配置 缓存框架 ehcache  &ndash;&gt;-->
+<!--    <bean id="cacheManger" class="org.apache.shiro.cache.ehcache.EhCacheManager">-->
+<!--        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>-->
+<!--    </bean>-->
+
+<!--    &lt;!&ndash;  3.自定义realm  &ndash;&gt;-->
+<!--    <bean id="jdbcRealm" class="com.chenbro.deliverybarcode.api.controller.shiro.ShiroRealm">-->
+<!--        <property name="credentialsMatcher">-->
+<!--            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">-->
+<!--                <property name="hashAlgorithmName"-->
+<!--                          value="MD5"></property>       &lt;!&ndash; hash Algorithm 加密的名称    hash Iterations 加密的次数 &ndash;&gt;-->
+<!--                <property name="hashIterations" value="1902"></property>-->
+<!--            </bean>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+<!--    &lt;!&ndash; 4.shiro 与spring 整合 &ndash;&gt;-->
+<!--    &lt;!&ndash; Spring 自动管理Shiro的对象(生命周期管理) &ndash;&gt;-->
+<!--    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>-->
+
+<!--    &lt;!&ndash; 为Spring配置的bean 启用Shiro Annotations,仅在lifecycleBeanProcessor运行后运行 &ndash;&gt;-->
+<!--    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"-->
+<!--          depends-on="lifecycleBeanPostProcessor"/>-->
+<!--    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">-->
+<!--        <property name="securityManager" ref="securityManager"/>-->
+<!--    </bean>-->
+
+<!--    &lt;!&ndash; 前提条件：bean id 必须要和 web.xml shiroFilter一致 &ndash;&gt;-->
+<!--    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">-->
+<!--        <property name="securityManager" ref="securityManager"/>-->
+<!--        <property name="loginUrl" value="/user/expire.do"/>    &lt;!&ndash; 未认证的登陆界面 &ndash;&gt;-->
+<!--        <property name="successUrl" value="/main.jsp"/>     &lt;!&ndash;  认证成功后可以访问的主页面 &ndash;&gt;-->
+<!--        <property name="unauthorizedUrl" value="/unauth.jsp"/>  &lt;!&ndash; 无权限页面 &ndash;&gt;-->
+
+<!--        &lt;!&ndash; map key=value 请求的URL资源=拦截器-->
+<!--            anon 匿名拦截器 (未认证的情况下允许访问）-->
+<!--            authc 认证拦截器 (认证成功的情况下允许访问)-->
+<!--            logout 认证过滤器-->
+<!--            roles[角色名称] 角色过滤器-->
+<!--            Ant 风格-->
+<!--            ？ 匹配任何单字符-->
+<!--            /*  匹配0或者任意数量的字符-->
+<!--            /** 匹配0或者更多的目录-->
+<!--            优先顺序：先声明 为优先-->
+
+<!--        &ndash;&gt;-->
+<!--        &lt;!&ndash;        <property name="filterChainDefinitions">-->
+<!--                    <value>-->
+<!--        &lt;!&ndash;                /WEB-INF/login.jsp = anon&ndash;&gt;-->
+<!--                        / = anon-->
+<!--                        /login.jsp = anon-->
+<!--                        /user/login.do = anon-->
+<!--                        /list.jsp = anon-->
+<!--                        /css/** = anon-->
+<!--                        /images/** = anon-->
+<!--                        /js/** = anon-->
+<!--                        /logout/exit = logout-->
+<!--                        /employee.jsp = roles[R002]-->
+<!--                        /admin.jsp = roles[R001]-->
+<!--                        /supplier.jsp = roles[R003]-->
+<!--                        /list.jsp = roles[R002,R003]-->
+<!--                        /** = authc-->
+<!--                    </value>-->
+<!--                </property>&ndash;&gt;-->
+<!--        <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap"></property>-->
+<!--    </bean>-->
+
+<!--    &lt;!&ndash; 工厂方法注入 &ndash;&gt;-->
+<!--    &lt;!&ndash; 1 构建Bean管理交由 Spring ioc 容器 &ndash;&gt;-->
+<!--    <bean id="filterChainDefinitionMapBuilder" class="com.chenbro.deliverybarcode.api.controller.shiro.FilterChainDefinitionMapBuilder"></bean>-->
+<!--    &lt;!&ndash; 2 工厂方法注入 &ndash;&gt;-->
+<!--    <bean id="filterChainDefinitionMap" factory-bean="filterChainDefinitionMapBuilder" factory-method="builder"/>-->
+    <!-- 2.配置 缓存框架 ehcache -->
+
+    <!-- 配置sessionFactory-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 指定配置文件位置 -->
+        <!--  <property name="configuration" value="classpath:mybatis.xml"/> -->
+        <property name="typeAliasesPackage" value="com.chenbro.deliverybarcode.model"/>
+
+        <!-- 配置加载映射文件 UserMapper.xml -->
+        <property name="mapperLocations" value="classpath:com/chenbro/deliverybarcode/mapper/*Mapper.xml"/>
+
+        <!--  传入PageHelper的插件 -->
+        <property name="plugins">
+            <array>
+                <!-- 传入插件的对象-->
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <props>
+                            <prop key="helperDialect">mysql</prop>
+                            <prop key="reasonable">true</prop>
+                        </props>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+    <!-- 自动生成dao,mapper -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.chenbro.deliverybarcode.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean"/>
+    </bean>
+
+    <!-- 自动扫描Service -->
+    <context:component-scan base-package="com.chenbro.deliverybarcode"/>
+
+
+    <!-- 配置事务-->
+    <!-- 配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+</beans>

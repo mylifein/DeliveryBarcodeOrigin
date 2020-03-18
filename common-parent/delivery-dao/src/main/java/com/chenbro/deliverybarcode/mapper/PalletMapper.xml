@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.PalletMapper">
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.Pallet">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="palletNo" property="palletNo" jdbcType="VARCHAR"/>
+        <result column="work_no" property="workNo" jdbcType="VARCHAR"/>
+        <result column="palletQty" property="palletQty" jdbcType="INTEGER"/>
+        <result column="batchNo" property="batchNo" jdbcType="VARCHAR"/>
+        <result column="capacity_no" property="capacityNo" jdbcType="VARCHAR"/>
+        <result column="model_no" property="modelNo" jdbcType="VARCHAR"/>
+        <result column="rule_no" property="ruleNo" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    uuid, palletNo, work_no, palletQty, batchNo, capacity_no,model_no,rule_no,op_user, create_time,update_user, update_time,del_flag
+  </sql>
+
+    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_pallet_info
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_pallet_info
+        where palletNo = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_user
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+
+
+
+
+</mapper>

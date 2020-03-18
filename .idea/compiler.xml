@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="delivery-utils" />
+        <module name="delivery-api" />
+        <module name="delivery-model" />
+        <module name="delivery-manager" />
+        <module name="delivery-service" />
+        <module name="delivery-dao" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="common-parent" target="1.5" />
+      <module name="delivery-api" target="1.7" />
+      <module name="delivery-dao" target="1.7" />
+      <module name="delivery-manager" target="1.7" />
+      <module name="delivery-model" target="1.7" />
+      <module name="delivery-service" target="1.7" />
+      <module name="delivery-utils" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

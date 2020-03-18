@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.3.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-4.3xsd">
+
+    <context:property-placeholder location="classpath:db.properties"/>
+
+
+    <!-- 配置数据源-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxPoolSize" value="30"/>
+        <property name="minPoolSize" value="2"/>
+    </bean>
+
+    <!-- 配置事务-->
+    <!-- 配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!-- 工作流引擎 -->
+    <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+        <!-- 数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 使用spring事务管理器 -->
+        <property name="transactionManager" ref="transactionManager"/>
+        <!-- 数据库策略-->
+        <property name="databaseSchemaUpdate" value="false"/>
+    </bean>
+
+
+    <!-- Shiro 的核心组件  -->
+    <!-- 1.配置securityManager -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!--   配置缓存配置  -->
+        <property name="cacheManager" ref="cacheManger"/>
+        <property name="realm" ref="jdbcRealm"/>
+    </bean>
+    <!--  2 配置 缓存框架 ehcache  -->
+    <bean id="cacheManger" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+    </bean>
+    <!--  3.自定义realm  -->
+    <bean id="jdbcRealm" class="com.chenbro.deliverybarcode.web.shiro.ShiroRealm">
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <property name="hashAlgorithmName"
+                          value="MD5"></property>       <!-- hash Algorithm 加密的名称    hash Iterations 加密的次数 -->
+                <property name="hashIterations" value="1902"></property>
+            </bean>
+        </property>
+    </bean>
+    <!-- 4.shiro 与spring 整合 -->
+    <!-- Spring 自动管理Shiro的对象(生命周期管理) -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+    <!-- 5.为Spring配置的bean 启用Shiro Annotations,仅在lifecycleBeanProcessor运行后运行 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+    <!-- 前提条件：bean id 必须要和 web.xml shiroFilter一致 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/user/index.do"/>       <!-- 未认证可访问的页面 -->
+        <property name="successUrl" value="/user/main.do"/>     <!--  认证成功后可以访问的主页面 -->
+        <property name="unauthorizedUrl" value="/user/expire.do"/>  <!-- 无权限页面 -->
+
+<!--        <property name="filterChainDefinitions">-->
+<!--            <value>-->
+<!--                /user/login.do = anon-->
+<!--                /user/exit.do = logout-->
+<!--                /** = authc-->
+<!--            </value>-->
+<!--        </property>-->
+        <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap"></property>
+    </bean>
+
+    <!-- 工厂方法注入 -->
+    <!-- 1.构建Bean管理交由Spring IOC容器 -->
+    <bean id="filterChainDefinitionMapBuilder" class="com.chenbro.deliverybarcode.web.shiro.FilterChainDefinitionMapBuilder"/>
+    <!-- 2. 工厂方法注入 -->
+    <bean id="filterChainDefinitionMap" factory-bean="filterChainDefinitionMapBuilder" factory-method="builder"/>
+
+    <!-- 配置sessionFactory-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 指定配置文件位置 -->
+        <!--  <property name="configuration" value="classpath:mybatis.xml"/> -->
+        <property name="typeAliasesPackage" value="com.chenbro.deliverybarcode.model"/>
+
+        <!-- 配置加载映射文件 UserMapper.xml -->
+        <property name="mapperLocations" value="classpath:com/chenbro/deliverybarcode/mapper/*Mapper.xml"/>
+
+        <!--  传入PageHelper的插件 -->
+        <property name="plugins">
+            <array>
+                <!-- 传入插件的对象-->
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <props>
+                            <prop key="helperDialect">mysql</prop>
+                            <prop key="reasonable">true</prop>
+                        </props>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+    <!-- 自动生成dao,mapper -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.chenbro.deliverybarcode.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean"/>
+    </bean>
+    <!-- 流程引擎 -->
+    <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+        <property name="processEngineConfiguration" ref="processEngineConfiguration"/>
+    </bean>
+
+    <!-- 资源服务service  -->
+    <bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService"/>
+
+    <!-- 流程运行service -->
+    <bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService"/>
+
+    <!-- 任务管理service -->
+    <bean id="taskService" factory-bean="processEngine" factory-method="getTaskService"/>
+
+    <!-- 历史service -->
+    <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService"/>
+
+    <!-- 自动扫描Service -->
+    <context:component-scan base-package="com.chenbro.deliverybarcode"/>
+
+
+</beans>

@@ -1,0 +1,7 @@
+# Project exclude paths
+/common-parent/delivery-api/target/
+/common-parent/delivery-dao/target/
+/common-parent/delivery-manager/target/
+/common-parent/delivery-model/target/
+/common-parent/delivery-service/target/
+/common-parent/delivery-utils/target/

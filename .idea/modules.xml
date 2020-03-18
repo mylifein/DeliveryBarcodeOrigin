@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/common-parent/common-parent.iml" filepath="$PROJECT_DIR$/common-parent/common-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-parent/delivery-api/delivery-api.iml" filepath="$PROJECT_DIR$/common-parent/delivery-api/delivery-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-parent/delivery-dao/delivery-dao.iml" filepath="$PROJECT_DIR$/common-parent/delivery-dao/delivery-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-parent/delivery-manager/delivery-manager.iml" filepath="$PROJECT_DIR$/common-parent/delivery-manager/delivery-manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-parent/delivery-model/delivery-model.iml" filepath="$PROJECT_DIR$/common-parent/delivery-model/delivery-model.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-parent/delivery-service/delivery-service.iml" filepath="$PROJECT_DIR$/common-parent/delivery-service/delivery-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-parent/delivery-utils/delivery-utils.iml" filepath="$PROJECT_DIR$/common-parent/delivery-utils/delivery-utils.iml" />
+    </modules>
+  </component>
+</project>
