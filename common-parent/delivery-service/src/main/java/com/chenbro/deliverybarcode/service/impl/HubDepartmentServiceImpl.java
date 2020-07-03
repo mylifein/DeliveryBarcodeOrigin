@@ -74,7 +74,6 @@ public class HubDepartmentServiceImpl extends BaseServiceImpl<HubDepartment> imp
             node.setId(department.getUuid());
             node.setText(department.getDeptName());
             node.setpId(department.getParentId());
-            node.setNodeInfo(department.getManager());
             nodes.add(node);
         }
 

@@ -26,8 +26,15 @@ public class HubUser extends BaseEntity {
     private String departmentId;        //部门Id
     private String departmentName;      //部门名称
     private HubDepartment hubDepartment;    //部门信息
+    private String staffPhoto;              //用戶头像
 
+    public HubUser() {
+    }
 
+    public HubUser(Object[] values) {
+        //数组格式：  用户名 ，工号，邮箱，手机号，是否启用，部门编码，性别
+        super();
+    }
 
 
     public String getUsername() {
@@ -117,5 +124,13 @@ public class HubUser extends BaseEntity {
 
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
+    }
+
+    public String getStaffPhoto() {
+        return staffPhoto;
+    }
+
+    public void setStaffPhoto(String staffPhoto) {
+        this.staffPhoto = staffPhoto;
     }
 }

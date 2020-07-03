@@ -8,7 +8,9 @@ import com.chenbro.deliverybarcode.service.IHubRoleService;
 import com.chenbro.deliverybarcode.service.base.BaseServiceImpl;
 import com.chenbro.deliverybarcode.utils.BeanMapUtils;
 import com.chenbro.deliverybarcode.utils.ConstantsUtil;
+import com.chenbro.deliverybarcode.utils.DateUtils;
 import com.chenbro.deliverybarcode.utils.UuidUtils;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +54,12 @@ public class HubRoleServiceImpl extends BaseServiceImpl<HubRole> implements IHub
     }
 
     @Override
+    public List<HubRole> findAll(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        return hubRoleMapper.findAll();
+    }
+
+    @Override
     public void update(HubRole hubRole) {
         HubRole byUUid = hubRoleMapper.findByUUid(hubRole.getUuid());
         if(byUUid != null){
@@ -63,6 +71,7 @@ public class HubRoleServiceImpl extends BaseServiceImpl<HubRole> implements IHub
     public void insert(HubRole hubRole) {
         String uuid = UuidUtils.getUUID();
         hubRole.setUuid(uuid);
+        hubRole.setCreateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
         hubRoleMapper.insert(hubRole);
     }
 
@@ -86,9 +95,7 @@ public class HubRoleServiceImpl extends BaseServiceImpl<HubRole> implements IHub
                 //3.分配权限
                 String uuid = UuidUtils.getUUID();
                 String username = "kervin";
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-                String createDate = df.format(new Date());
-                hubRoleMapper.assignRolePerm(hubRole,setPermission,uuid,username,createDate);
+                hubRoleMapper.assignRolePerm(hubRole,setPermission,uuid,username,DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
             }
         }
     }

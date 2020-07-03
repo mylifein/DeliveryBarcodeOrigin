@@ -4,7 +4,9 @@ import com.chenbro.deliverybarcode.model.HubDepartment;
 import com.chenbro.deliverybarcode.model.HubUser;
 import com.chenbro.deliverybarcode.service.base.IBaseService;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IHubUserService extends IBaseService<HubUser> {
@@ -16,4 +18,6 @@ public interface IHubUserService extends IBaseService<HubUser> {
     HubUser findByUsername(String username);
 
     HubUser findUnionByUUid(String uuid);
+
+    String uploadImage(String id, MultipartFile file) throws IOException;
 }

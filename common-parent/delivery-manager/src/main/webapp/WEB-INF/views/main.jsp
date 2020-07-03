@@ -33,6 +33,8 @@
   <!-- Main Footer -->
   <%@include file="footer.jsp"%>
 </div>
+<!-- Bootstrap 4 -->
+<script src="${pageContext.request.contextPath}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- ./wrapper -->
 </body>
 </html>

@@ -8,11 +8,13 @@ import com.chenbro.deliverybarcode.service.IHubUserService;
 import com.chenbro.deliverybarcode.service.base.BaseServiceImpl;
 import com.chenbro.deliverybarcode.utils.BeanMapUtils;
 import com.chenbro.deliverybarcode.utils.ConstantsUtil;
+import com.chenbro.deliverybarcode.utils.DateUtils;
 import com.chenbro.deliverybarcode.utils.UuidUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Permission;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -119,28 +121,36 @@ public class HubPermissionServiceImpl extends BaseServiceImpl<HubPermission> imp
     }
 
     @Override
-    public void save(Map<String, Object> map) throws Exception {
+    public void save(Map<String, Object> map,String username) throws Exception {
         //设置主键
         String uuid = UuidUtils.getUUID();
         //1.通过Map构造permission对象
         HubPermission hubPermission = BeanMapUtils.mapToBean(map,HubPermission.class);
         hubPermission.setUuid(uuid);
+        hubPermission.setCreateBy(username);
+        hubPermission.setCreateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
         //2.根据类型构造不同的资源对象(菜单、按钮、api)
         int type = hubPermission.getType();
         switch (type){
             case ConstantsUtil.PY_MENU:
                 HubPermissionMenu hubPermissionMenu = BeanMapUtils.mapToBean(map,HubPermissionMenu.class);
                 hubPermissionMenu.setUuid(uuid);
+                hubPermissionMenu.setCreateBy(username);
+                hubPermissionMenu.setCreateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
                 hubPermissionMenuMapper.insert(hubPermissionMenu);
                 break;
             case ConstantsUtil.PY_POINT:
                 HubPermissionPoint hubPermissionPoint = BeanMapUtils.mapToBean(map,HubPermissionPoint.class);
                 hubPermissionPoint.setUuid(uuid);
+                hubPermissionPoint.setCreateBy(username);
+                hubPermissionPoint.setCreateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
                 hubPermissionPointMapper.insert(hubPermissionPoint);
                 break;
             case ConstantsUtil.PY_API:
                 HubPermissionApi hubPermissionApi = BeanMapUtils.mapToBean(map,HubPermissionApi.class);
                 hubPermissionApi.setUuid(uuid);
+                hubPermissionApi.setCreateBy(username);
+                hubPermissionApi.setCreateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
                 hubPermissionApiMapper.insert(hubPermissionApi);
                 break;
             default:
@@ -148,8 +158,9 @@ public class HubPermissionServiceImpl extends BaseServiceImpl<HubPermission> imp
         }
         //3.保存
         hubPermissionMapper.insert(hubPermission);
-
     }
+
+
 
     @Override
     public void updateByMap(Map<String, Object> map) throws Exception {

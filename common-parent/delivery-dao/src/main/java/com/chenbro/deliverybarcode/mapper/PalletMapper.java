@@ -3,6 +3,10 @@ package com.chenbro.deliverybarcode.mapper;
 import com.chenbro.deliverybarcode.mapper.base.BaseMapper;
 import com.chenbro.deliverybarcode.model.Box;
 import com.chenbro.deliverybarcode.model.Pallet;
+import com.chenbro.deliverybarcode.model.PalletQueryCond;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @ClassName BoxMapper
@@ -13,7 +17,14 @@ import com.chenbro.deliverybarcode.model.Pallet;
  **/
 public interface PalletMapper extends BaseMapper<Pallet> {
 
-    void updateStatus(Pallet pallet);
 
     public Pallet findById(String id);
+
+    List<Pallet> findAll(@Param("cusNo") String cusNo);
+
+    Pallet findDetailById(@Param("uuid")String uuid);
+
+    List<Pallet> queryPalletReportByCond(PalletQueryCond palletQueryCond);
+
+
 }

@@ -14,8 +14,10 @@ public class Node {
     private String id;
     private String pId;
     private String text;
+    private String href;
+    private String icon;
+    private String tags;
     private List<Node> nodes;
-    private String nodeInfo;
 
 
     public String getId() {
@@ -50,11 +52,27 @@ public class Node {
         this.nodes = nodes;
     }
 
-    public String getNodeInfo() {
-        return nodeInfo;
+    public String getHref() {
+        return href;
     }
 
-    public void setNodeInfo(String nodeInfo) {
-        this.nodeInfo = nodeInfo;
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 }

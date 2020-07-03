@@ -22,6 +22,14 @@ public class Pallet extends BaseEntity {
     private String capacityNo;
     private String modelNo;
     private String ruleNo;
+    private String cusNo;
+    private String cusName;
+    private String cusPo;
+    private String cusMatno;
+    private String delMatno;
+    private String soOrder;
+    private String vehicleNo;
+    private String status;
     private List<Box> boxes;
 
 
@@ -87,5 +95,69 @@ public class Pallet extends BaseEntity {
 
     public void setBoxes(List<Box> boxes) {
         this.boxes = boxes;
+    }
+
+    public String getVehicleNo() {
+        return vehicleNo;
+    }
+
+    public void setVehicleNo(String vehicleNo) {
+        this.vehicleNo = vehicleNo;
+    }
+
+    public String getCusNo() {
+        return cusNo;
+    }
+
+    public void setCusNo(String cusNo) {
+        this.cusNo = cusNo;
+    }
+
+    public String getCusName() {
+        return cusName;
+    }
+
+    public void setCusName(String cusName) {
+        this.cusName = cusName;
+    }
+
+    public String getCusPo() {
+        return cusPo;
+    }
+
+    public void setCusPo(String cusPo) {
+        this.cusPo = cusPo;
+    }
+
+    public String getCusMatno() {
+        return cusMatno;
+    }
+
+    public void setCusMatno(String cusMatno) {
+        this.cusMatno = cusMatno;
+    }
+
+    public String getDelMatno() {
+        return delMatno;
+    }
+
+    public void setDelMatno(String delMatno) {
+        this.delMatno = delMatno;
+    }
+
+    public String getSoOrder() {
+        return soOrder;
+    }
+
+    public void setSoOrder(String soOrder) {
+        this.soOrder = soOrder;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

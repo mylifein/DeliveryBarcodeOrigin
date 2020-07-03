@@ -42,7 +42,7 @@ public class HubPermissionController {
 
     @RequestMapping(value = "/permission",method = RequestMethod.POST)
     public Result addDepartment(@RequestBody Map<String,Object> map) throws Exception {
-        hubPermissionService.save(map);
+        hubPermissionService.save(map,"C8777");
         return new Result(ResultCode.SUCCESS);
     }
 

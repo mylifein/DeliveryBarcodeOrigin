@@ -1,8 +1,8 @@
 package com.chenbro.deliverybarcode.mapper;
 
 import com.chenbro.deliverybarcode.mapper.base.BaseMapper;
-import com.chenbro.deliverybarcode.model.Box;
-import com.chenbro.deliverybarcode.model.InspurPallet;
+import com.chenbro.deliverybarcode.model.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,9 +21,14 @@ public interface BoxMapper extends BaseMapper<Box> {
 
     List<Box> findBoxsByStatus(String status);
 
-    public Box findById(String id);
+    Box findById(String id);
 
     Integer findQtysByStatus(String status);
 
     List<InspurPallet> findAllInspurPallet();
+
+    Box findDetailById(@Param("uuid") String uuid);
+
+    List<Box> queryReportByCond(DeliveryQueryCond deliveryQueryCond);
+
 }

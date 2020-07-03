@@ -53,4 +53,49 @@ public abstract class BaseServiceImpl<T> implements IBaseService<T>{
     @Autowired
     protected HubResourcesMapper hubResourcesMapper;
 
+    @Autowired
+    protected CtcodeMapper ctcodeMapper;
+
+    @Autowired
+    protected PrintModelMapper printModelMapper;
+
+    @Autowired
+    protected MandatoryFieldMapper mandatoryFieldMapper;
+
+    @Autowired
+    protected ModelCiteMapper modelCiteMapper;
+
+    @Autowired
+    protected FieldTypeMapper fieldTypeMapper;
+
+    @Autowired
+    protected CodeRuleMapper codeRuleMapper;
+
+    @Autowired
+    protected CapacityMapper capacityMapper;
+
+    @Autowired
+    protected CapacityCiteMapper capacityCiteMapper;
+
+    @Autowired
+    protected RuleCiteMapper ruleCiteMapper;
+
+    @Autowired
+    protected MandFieldCiteMapper mandFieldCiteMapper;
+
+    @Autowired
+    protected PrintDepartmentMapper printDepartmentMapper;
+
+    @Autowired
+    protected WoBatchMapper woBatchMapper;
+
+    @Autowired
+    protected CheckWorkOrderMapper checkWorkOrderMapper;
+
+    @Autowired
+    protected SysLogMapper sysLogMapper;
+
+    @Autowired
+    protected  BarcodeHistoryMapper barcodeHistoryMapper;
+
 }

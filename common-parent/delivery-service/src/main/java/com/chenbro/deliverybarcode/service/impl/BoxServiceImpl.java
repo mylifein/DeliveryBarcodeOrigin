@@ -1,7 +1,6 @@
 package com.chenbro.deliverybarcode.service.impl;
 
-import com.chenbro.deliverybarcode.model.Box;
-import com.chenbro.deliverybarcode.model.InspurPallet;
+import com.chenbro.deliverybarcode.model.*;
 import com.chenbro.deliverybarcode.model.base.BoxStatus;
 import com.chenbro.deliverybarcode.model.base.Result;
 import com.chenbro.deliverybarcode.model.base.ResultCode;
@@ -46,6 +45,7 @@ public class BoxServiceImpl extends BaseServiceImpl<Box> implements IBoxService 
 
     @Override
     public void insert(Box box) {
+
         boxMapper.insert(box);
     }
 
@@ -85,6 +85,70 @@ public class BoxServiceImpl extends BaseServiceImpl<Box> implements IBoxService 
         return new Result(ResultCode.INCONFORMITY,box);
     }
 
+
+    @Override
+    public Result receive(Box box) {
+        //查询当前carton 是否是Carton No/ Pallet No
+        Box judgeBox = boxMapper.findById(box.getCartonNo());
+        List<String> unhandleBox = new ArrayList<>();
+        if(judgeBox == null){
+            List<Box> boxes = boxMapper.findBoxsByPalletNo(box.getCartonNo());
+            if(boxes == null || boxes.size() < 1){
+                return new Result(ResultCode.INVALIDID);
+            }
+            boolean handle = false;
+            for(Box boxItem : boxes){
+                if(boxItem.getCartonStatus().equals("1") || boxItem.getCartonStatus().equals("0")){
+                    handle = true;
+                    boxItem.setCartonStatus("2");
+                    boxItem.setUpdateBy(box.getUpdateBy());
+                    boxItem.setUpdateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
+                    boxMapper.updateStatus(boxItem);
+                }else {
+                    switch (boxItem.getCartonStatus()){
+                        case "2":
+                            unhandleBox.add(boxItem.getCartonNo() + "已入庫;");
+                            break;
+                        case "3":
+                            unhandleBox.add(boxItem.getCartonNo() + "已出庫;");
+                            break;
+                    }
+                }
+            }
+            if(handle){
+                Pallet pallet = new Pallet();
+                pallet.setPalletNo(box.getCartonNo());
+                pallet.setVehicleNo(box.getVehicleNo());
+                pallet.setUpdateBy(box.getUpdateBy());
+                pallet.setUpdateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
+                palletMapper.update(pallet);
+                return new Result(ResultCode.SUCCESS,boxes);
+            }else{
+                return new Result(10006,unhandleBox.toString(),false);
+            }
+
+        }else{
+            if(judgeBox.getCartonStatus().equals("1") || judgeBox.getCartonStatus().equals("0")){
+                judgeBox.setCartonStatus("2");
+                judgeBox.setUpdateBy(box.getUpdateBy());
+                judgeBox.setUpdateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
+                boxMapper.update(judgeBox);
+                return new Result(ResultCode.SUCCESS,box);
+            }else{
+                switch (judgeBox.getCartonStatus()){
+                    case "2":
+                        unhandleBox.add(judgeBox.getCartonNo() + "已入庫;");
+                        break;
+                    case "3":
+                        unhandleBox.add(judgeBox.getCartonNo() + "已出庫;");
+                        break;
+                }
+                return new Result(10006,unhandleBox.toString(),false);
+            }
+
+        }
+    }
+
     @Override
     public Result shipping(String id) {
         //查询当前carton 是否Carton No/ Pallet No
@@ -121,6 +185,72 @@ public class BoxServiceImpl extends BaseServiceImpl<Box> implements IBoxService 
         return new Result(ResultCode.INCONFORMITY,box);
     }
 
+    @Override
+    public Result shipping(Box box) {
+        //查询当前carton 是否是Carton No/ Pallet No
+        Box judgeBox = boxMapper.findById(box.getCartonNo());
+        List<String> unhandleBox = new ArrayList<>();
+        if(judgeBox == null){
+            List<Box> boxes = boxMapper.findBoxsByPalletNo(box.getCartonNo());
+            if(boxes == null || boxes.size() < 1){
+                return new Result(ResultCode.INVALIDID);
+            }else{
+                boolean handle = false;
+                for(Box boxItem : boxes){
+                    if(boxItem.getCartonStatus().equals("2")||boxItem.getCartonStatus().equals("1")){
+                        handle = true;
+                        boxItem.setCartonStatus("3");
+                        boxItem.setVehicleNo(box.getVehicleNo());                   //設置車牌號
+                        boxItem.setUpdateBy(box.getUpdateBy());
+                        boxItem.setUpdateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
+                        boxMapper.updateStatus(boxItem);
+                    }else{
+                        switch (boxItem.getCartonStatus()){
+                            case "0":
+                                unhandleBox.add(boxItem.getCartonNo() + "已裝箱，不能直接出貨;");
+                                break;
+                            case "3":
+                                unhandleBox.add(boxItem.getCartonNo() + "已出庫；");
+                                break;
+                        }
+                    }
+                }
+                if(handle){
+                    Pallet pallet = new Pallet();
+                    pallet.setPalletNo(box.getCartonNo());
+                    pallet.setVehicleNo(box.getVehicleNo());
+                    pallet.setUpdateBy(box.getUpdateBy());
+                    pallet.setUpdateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
+                    palletMapper.update(pallet);
+                    return new Result(ResultCode.SUCCESS,boxes);
+                }else{
+                    return new Result(10006,unhandleBox.toString(),false);
+                }
+            }
+
+        }else{
+            if(judgeBox.getCartonStatus().equals("2") || judgeBox.getCartonStatus().equals("1")){
+                judgeBox.setCartonStatus("3");
+                judgeBox.setVehicleNo(box.getVehicleNo());                      //設置車牌號
+                judgeBox.setUpdateBy(box.getUpdateBy());
+                judgeBox.setUpdateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
+                boxMapper.update(judgeBox);
+                return new Result(ResultCode.SUCCESS,box);
+            }else {
+                switch (judgeBox.getCartonStatus()){
+                    case "0":
+                        unhandleBox.add(judgeBox.getCartonNo() + "已裝箱，不能直接出貨;");
+                        break;
+                    case "3":
+                        unhandleBox.add(judgeBox.getCartonNo() + "已出庫；");
+                        break;
+                }
+                return new Result(10006,unhandleBox.toString(),false);
+            }
+        }
+    }
+
+
 
     @Override
     public List<Box> findAllReceive() {
@@ -128,6 +258,12 @@ public class BoxServiceImpl extends BaseServiceImpl<Box> implements IBoxService 
         return boxes;
     }
 
+    @Override
+    public List<Box> findAll(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<Box> boxes = boxMapper.findBoxsByStatus(null);
+        return boxes;
+    }
 
     @Override
     public List<Box> findAllShipping() {
@@ -162,4 +298,22 @@ public class BoxServiceImpl extends BaseServiceImpl<Box> implements IBoxService 
         PageHelper.startPage(pageNum,pageSize);
         return boxMapper.findAllInspurPallet();
     }
+
+    @Override
+    public Box findDetailById(String uuid) {
+        return boxMapper.findDetailById(uuid);
+    }
+
+
+    @Override
+    public Box findById(String id) {
+        return boxMapper.findById(id);
+    }
+
+    @Override
+    public List<Box> queryReportByCond(DeliveryQueryCond deliveryQueryCond) {
+        return boxMapper.queryReportByCond(deliveryQueryCond);
+    }
+
+
 }

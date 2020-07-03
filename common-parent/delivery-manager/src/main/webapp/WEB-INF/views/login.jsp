@@ -33,7 +33,7 @@
     <div class="card-body login-card-body">
       <p class="login-box-msg">后台管理平台</p>
       <shiro:authenticated>
-        <p class="login-box-msg">登录成功。登录用户名是：<shiro:principal/></p>
+        <p class="login-box-msg">登录成功。登录用户名是：<shiro:principal type="com.chenbro.deliverybarcode.model.HubUser" property="username"/><br><a href="${pageContext.request.contextPath}/user/main.do">请点击此处进入主页面</a></p>
       </shiro:authenticated>
       <shiro:notAuthenticated>
         <form action="${pageContext.request.contextPath}/user/login.do" method="post">

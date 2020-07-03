@@ -19,6 +19,26 @@
         <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <resultMap id="BaseDetailResultMap" type="com.chenbro.deliverybarcode.model.HubUser">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="enable_state" property="enableState" jdbcType="VARCHAR"/>
+        <result column="work_number" property="workNumber" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="VARCHAR"/>
+        <result column="department_id" property="departmentId" jdbcType="VARCHAR"/>
+        <result column="dept_name" property="departmentName" jdbcType="VARCHAR"/>
+        <result column="stuff_photo" property="staffPhoto" jdbcType="LONGVARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
     <resultMap id="complexResultMap" type="com.chenbro.deliverybarcode.model.HubUser">
         <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
         <result column="username" property="username" jdbcType="VARCHAR"/>
@@ -48,9 +68,14 @@
     dept_name, op_user, create_time, update_time,del_flag
     </sql>
 
-    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+    <sql id="BaseDetail_Column_List">
+    uuid, username, password, enable_state, work_number, email, mobile, gender, department_id,
+    dept_name,stuff_photo, op_user, create_time, update_time,del_flag
+    </sql>
+
+    <select id="findByUUid" resultMap="BaseDetailResultMap" parameterType="java.lang.String">
         select
-        <include refid="Base_Column_List"></include>
+        <include refid="BaseDetail_Column_List"/>
         from hub_user
         where uuid = #{uuid,jdbcType=VARCHAR} and del_flag is null
     </select>
@@ -65,8 +90,8 @@
     </select>
 
 
-    <select id="findByUsername" resultMap="BaseResultMap" parameterType="java.lang.String">
-        select <include refid="Base_Column_List"/> from hub_user where username=#{username,jdbcType=VARCHAR} and del_flag is null
+    <select id="findByUsername" resultMap="BaseDetailResultMap" parameterType="java.lang.String">
+        select <include refid="BaseDetail_Column_List"/> from hub_user where username=#{username,jdbcType=VARCHAR} and del_flag is null
     </select>
 
     <select id="findAll" resultMap="complexResultMap">
@@ -120,6 +145,9 @@
             <if test="departmentName != null">
                 dept_name,
             </if>
+            <if test="staffPhoto != null">
+                stuff_photo,
+            </if>
             <if test="createBy != null">
                 op_user,
             </if>
@@ -166,6 +194,9 @@
             </if>
             <if test="departmentName != null">
                 #{departmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="staffPhoto != null">
+                #{staffPhoto,jdbcType=LONGVARCHAR},
             </if>
             <if test="createBy != null">
                 #{createBy,jdbcType=VARCHAR},
@@ -214,6 +245,9 @@
             </if>
             <if test="departmentName != null">
                 dept_name = #{departmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="staffPhoto != null">
+                stuff_photo = #{staffPhoto,jdbcType=LONGVARCHAR},
             </if>
             <if test="updateBy != null">
                 update_user = #{updateBy,jdbcType=VARCHAR},

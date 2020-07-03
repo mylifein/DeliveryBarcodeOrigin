@@ -11,6 +11,7 @@
 
   <title>CHENBRO | Barcode</title>
   <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/barcode.ico" type="image/x-icon">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/fontawesome-free/css/v4-shims.min.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/bootTree/css/default.css">
   <!-- iCheck for checkboxes and radio inputs -->
   <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
@@ -52,7 +53,13 @@
       <!-- Default box -->
       <div class="card">
           <div class="card-header">
-
+            <div class="card-title">
+              <div class="input-group input-group-sm" style="width: 150px;">
+              <a class="btn btn-navbar" href="${pageContext.request.contextPath}/box/queryInspur.do">
+                <i class="fa fa-refresh"></i> 刷新
+              </a>
+              </div>
+            </div>
           <div class="card-tools" >
             <!-- SEARCH FORM -->
             <form>
@@ -128,9 +135,6 @@
                     ${pallet.palletNo}
                 </td>
                 <td>
-                    ${pallet.po}
-                </td>
-                <td>
                     ${pallet.vehicleNo}
                 </td>
               </tr>
@@ -184,6 +188,7 @@
 </div>
 <!-- ./wrapper -->
 <script src="${pageContext.request.contextPath}/bootTree/js/jquery-2.1.0.min.js"></script>
+<script src="${pageContext.request.contextPath}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

@@ -25,7 +25,7 @@ public class HubPermission extends BaseEntity {
     private String menuIcon;
     private String menuOrder;
 
-    private String pointClass;          //权限代码
+    private String pointClass;          //按钮样式
     private String pointIcon;           //按钮icon
     private String pointStatus;         //状态
 

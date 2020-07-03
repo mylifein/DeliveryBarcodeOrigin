@@ -1,16 +1,18 @@
 package com.chenbro.deliverybarcode.service.impl;
 
-import com.chenbro.deliverybarcode.model.HubDepartment;
 import com.chenbro.deliverybarcode.model.HubRole;
 import com.chenbro.deliverybarcode.model.HubUser;
-import com.chenbro.deliverybarcode.service.IHubDepartmentService;
 import com.chenbro.deliverybarcode.service.IHubUserService;
 import com.chenbro.deliverybarcode.service.base.BaseServiceImpl;
+import com.chenbro.deliverybarcode.utils.DateUtils;
 import com.chenbro.deliverybarcode.utils.UuidUtils;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Encoder;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -44,10 +46,11 @@ public class HubUserServiceImpl extends BaseServiceImpl<HubUser> implements IHub
     @Override
     public void update(HubUser hubUser) {
         //1.根据id查询部门
-        HubUser resulHhubUser = hubUserMapper.findByUUid(hubUser.getUuid());
+        HubUser resulHhubUser = hubUserMapper.findByUsername(hubUser.getUsername());
         //2.设置部门属性
         if(resulHhubUser != null) {
             //3.更新部门
+            hubUser.setUpdateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
             hubUserMapper.update(hubUser);
         }
     }
@@ -55,11 +58,8 @@ public class HubUserServiceImpl extends BaseServiceImpl<HubUser> implements IHub
     @Override
     public void insert(HubUser hubUser) {
         //设置主键的值
-        String uuid = UuidUtils.getUUID();
-        hubUser.setUuid(uuid);
-        hubUser.setUsername(hubUser.getWorkNumber());
-        hubUser.setPassword("123456");
-        hubUser.setEnableState("0");
+        hubUser.setUuid(UuidUtils.getUUID());
+        hubUser.setCreateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
         hubUserMapper.insert(hubUser);
     }
 
@@ -84,9 +84,7 @@ public class HubUserServiceImpl extends BaseServiceImpl<HubUser> implements IHub
                 if(hubRole != null){
                     String uuid = UuidUtils.getUUID();
                     String username = "kervin";
-                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-                    String createDate = df.format(new Date());
-                    hubUserMapper.assignUserRole(hubUser,hubRole,uuid,username,createDate);
+                    hubUserMapper.assignUserRole(hubUser,hubRole,uuid,username,DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
                 }
             }
         }
@@ -100,5 +98,23 @@ public class HubUserServiceImpl extends BaseServiceImpl<HubUser> implements IHub
     @Override
     public HubUser findUnionByUUid(String uuid) {
         return hubUserMapper.findUnionByUUid(uuid);
+    }
+
+    /**
+    * @Description //TODO  完成图片处理
+    * @Date 2020/3/28 18:52
+    * @return java.lang.String  请求路径
+    **/
+    @Override
+    public String uploadImage(String id, MultipartFile file) throws IOException {
+        //1.根据id查询用户
+        HubUser user = hubUserMapper.findByUUid(id);
+        //2.使用DataUrl的形式存储图片(对图片byte数组进行base64编码)
+        BASE64Encoder base64Encoder = new BASE64Encoder();
+        String encode = "data:image/png;base64," + base64Encoder.encode(file. getBytes());
+        //3.更新用户头像地址
+        user.setStaffPhoto(encode);
+        //4.返回
+        return encode;
     }
 }

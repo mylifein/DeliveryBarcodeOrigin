@@ -12,6 +12,8 @@ public interface IHubRoleService extends IBaseService<HubRole> {
 
     List<HubRole> findAll();
 
+    List<HubRole> findAll(int pageNum,int pageSize);
+
     void assignPerms(String roleId, List<String> permIds);
 
     List<HubRole> findAllUnion();

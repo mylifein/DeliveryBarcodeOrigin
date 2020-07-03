@@ -1,7 +1,6 @@
 package com.chenbro.deliverybarcode.service;
 
-import com.chenbro.deliverybarcode.model.Box;
-import com.chenbro.deliverybarcode.model.InspurPallet;
+import com.chenbro.deliverybarcode.model.*;
 import com.chenbro.deliverybarcode.model.base.Result;
 import com.chenbro.deliverybarcode.service.base.IBaseService;
 
@@ -13,7 +12,22 @@ public interface IBoxService extends IBaseService<Box> {
 
     Result receive(String cartonNo);
 
+
+    /**
+    * @Description //TODO 根據裝箱單進行入庫處理
+    * @Date 2020/4/8 9:24
+    * @return com.chenbro.deliverybarcode.model.base.Result
+    **/
+    Result receive(Box box);
+
     Result shipping(String id);
+
+    /**
+    * @Description //TODO  根據裝箱單進行出貨處理
+    * @Date 2020/4/8 9:23
+    * @return com.chenbro.deliverybarcode.model.base.Result
+    **/
+    Result shipping(Box box);
 
     /**
     * @Description //TODO 查詢所有 倉庫收貨狀態的 裝箱單
@@ -38,6 +52,8 @@ public interface IBoxService extends IBaseService<Box> {
     **/
     List<Box> findAll();
 
+    List<Box> findAll(int pageNum,int pageSize);
+
     /**
     * @Description //TODO  根据装箱单状态查询数量
     * @Date 2020/3/12 23:32
@@ -52,4 +68,22 @@ public interface IBoxService extends IBaseService<Box> {
     * @return java.util.List<com.chenbro.deliverybarcode.model.InspurPallet>
     **/
     List<InspurPallet> findAllInspurPallet(int pageNum,int pageSize);
+
+    Box findDetailById(String uuid);
+
+    /**
+    * @Description //TODO  根據箱號查詢裝箱單號
+    * @Date 2020/4/8 8:37
+    * @return com.chenbro.deliverybarcode.model.Box
+    **/
+    Box findById(String id);
+
+    /**
+    * @Description //TODO 根据条件查询装箱单报表
+    * @Date 2020/5/4 9:07
+    * @return java.util.List<com.chenbro.deliverybarcode.model.Box>
+    **/
+    List<Box> queryReportByCond(DeliveryQueryCond deliveryQueryCond);
+
+
 }

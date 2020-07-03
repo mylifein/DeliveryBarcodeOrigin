@@ -24,9 +24,9 @@
   <!-- /.content-wrapper -->
 
   <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
+<%--  <aside class="control-sidebar control-sidebar-dark">--%>
+<%--    <!-- Control sidebar content goes here -->--%>
+<%--  </aside>--%>
   <!-- /.control-sidebar -->
 
   <!-- Main Footer -->
@@ -41,8 +41,7 @@
   <!-- REQUIRED SCRIPTS -->
   <!-- jQuery -->
   <script src="${pageContext.request.contextPath}/plugins/jquery/jquery.min.js"></script>
-  <!-- Bootstrap -->
-  <script src="${pageContext.request.contextPath}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
   <!-- overlayScrollbars -->
   <script src="${pageContext.request.contextPath}/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
   <!-- AdminLTE App -->

@@ -2,6 +2,8 @@ package com.chenbro.deliverybarcode.model;
 
 import com.chenbro.deliverybarcode.model.base.BaseEntity;
 
+import java.util.List;
+
 /**
  * @ClassName Box
  * @Description TODO
@@ -28,9 +30,10 @@ public class Box extends BaseEntity {
     private String offiNo;
     private String verNo;
     private String woQuantity;
-    private String completedQty;
     private String modelNo;
     private String soOrder;
+    private String vehicleNo;
+    private List<Ctcode> ctcodes;
 
     public String getCartonNo() {
         return cartonNo;
@@ -168,14 +171,6 @@ public class Box extends BaseEntity {
         this.woQuantity = woQuantity;
     }
 
-    public String getCompletedQty() {
-        return completedQty;
-    }
-
-    public void setCompletedQty(String completedQty) {
-        this.completedQty = completedQty;
-    }
-
     public String getModelNo() {
         return modelNo;
     }
@@ -190,5 +185,21 @@ public class Box extends BaseEntity {
 
     public void setSoOrder(String soOrder) {
         this.soOrder = soOrder;
+    }
+
+    public List<Ctcode> getCtcodes() {
+        return ctcodes;
+    }
+
+    public void setCtcodes(List<Ctcode> ctcodes) {
+        this.ctcodes = ctcodes;
+    }
+
+    public String getVehicleNo() {
+        return vehicleNo;
+    }
+
+    public void setVehicleNo(String vehicleNo) {
+        this.vehicleNo = vehicleNo;
     }
 }

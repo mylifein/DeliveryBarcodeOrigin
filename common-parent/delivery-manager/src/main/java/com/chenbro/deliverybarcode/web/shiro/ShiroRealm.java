@@ -40,7 +40,7 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         //1.得到用户名
-        String username = (String) principals.getPrimaryPrincipal();
+        HubUser hubUser = (HubUser) principals.getPrimaryPrincipal();
         //2.根据用户名称，查询该用户有哪些角色和权限
         Set<HubRole> roles = new HashSet<>();
         new SimpleAuthorizationInfo();
@@ -59,9 +59,11 @@ public class ShiroRealm extends AuthorizingRealm {
         if(hubUser == null){
             throw new UnknownAccountException();
         }
-
         //4.如果用户的状态 锁定 LockedAccountException  status = 0  1正常
-        Object principal = username;
+        if(hubUser.getEnableState() == null || (!hubUser.getEnableState().equals("1"))){
+            throw new LockedAccountException();
+        }
+        Object principal = hubUser;
         Object credentials = hubUser.getPassword();
         //5.密码的比较(前台密码=数据库中查询的密码） shiro内部来完成
         ByteSource credentialsSalt = ByteSource.Util.bytes(username);  //加盐主体

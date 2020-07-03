@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName BoxController
@@ -91,7 +92,14 @@ public class BoxController {
     }
 
     @RequestMapping(value = "shipping/{id:.+}", method = RequestMethod.GET)
-    public Result shipping2(@PathVariable("id") String id) {
+    public Result shippingQuery(@PathVariable("id") String id) {
         return new Result(ResultCode.SUCCESS,palletService.findById(id));
     }
+
+
+    @RequestMapping(value = "reply/{barcode:.+}",method = RequestMethod.PUT)
+    public Result replyUpdate(@PathVariable("barcode") String barcode,@RequestBody Map<String,String> map){
+        return palletService.replyUpdate(barcode,map.get("statusCode"));
+    }
+
 }

@@ -10,6 +10,12 @@
 
   <title>CHENBRO | Barcode</title>
   <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/barcode.ico" type="image/x-icon">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/bootTree/css/default.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/fontawesome-free/css/v4-shims.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/toastr/toastr.min.css">
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
@@ -40,6 +46,96 @@
     </div>
     <!-- /.content-header -->
 
+    <!-- /.modal -->
+
+    <div class="modal fade" id="modal-lg">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">装箱单详细信息</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal" id="addUserForm">
+              <div class="card-body">
+                <div class="form-group row">
+                  <label for="boxNo" class="col-sm-1 col-form-label">箱号</label>
+                  <div class="col-sm-5">
+                    <input type="text" class="form-control" name="boxNo" id="boxNo" readonly>
+                  </div>
+                  <label for="cartonQty" class="col-sm-2 col-form-label">装箱数量</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" name="cartonQty" id="cartonQty" readonly>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="workNo" class="col-sm-1 col-form-label">工单号</label>
+                  <div class="col-sm-5">
+                    <input type="text" class="form-control" name="workNo" id="workNo" readonly>
+                  </div>
+                  <label for="cusPo" class="col-sm-2 col-form-label">客戶PO</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" name="cusPo" id="cusPo" readonly>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="cusName" class="col-sm-1 col-form-label">客戶名稱</label>
+                  <div class="col-sm-5">
+                    <input type="text" class="form-control" name="cusName" id="cusName" readonly>
+                  </div>
+                  <label for="delMatno" class="col-sm-2 col-form-label">出貨料號</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" name="delMatno" id="delMatno" readonly>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="soOrder" class="col-sm-1 col-form-label">销货单号</label>
+                  <div class="col-sm-5">
+                    <input type="text" class="form-control" name="soOrder" id="soOrder" readonly>
+                  </div>
+                  <label for="vehicleNo" class="col-sm-2 col-form-label">车牌号</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" name="vehicleNo" id="vehicleNo" readonly>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <table class="table table-striped projects">
+                    <thead>
+                    <tr>
+                      <th style="width: 10%">
+                        CT号码
+                      </th>
+                      <th style="width: 15%">
+                        编码规则号
+                      </th>
+                      <th style="width: 12%">
+                        创建者
+                      </th>
+                      <th style="width: 12%">
+                        修改者
+                      </th>
+                    </tr>
+                    </thead>
+                    <tbody id="detailBody">
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+
+    <!-- /.modal -->
+
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
@@ -66,7 +162,7 @@
 
               <div class="info-box-content">
                 <span class="info-box-text">装栈板数量</span>
-                <span class="info-box-number">123</span>
+                <span class="info-box-number">${packedQty}</span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -132,7 +228,13 @@
             <!-- TABLE: LATEST ORDERS -->
             <div class="card">
               <div class="card-header border-transparent">
-                <h3 class="card-title">装箱单</h3>
+                <div class="card-title">
+                  <div class="input-group input-group-sm" style="width: 150px;">
+                    <a class="btn btn-navbar" href="${pageContext.request.contextPath}/box/query.do">
+                      <i class="fa fa-refresh"></i> 刷新
+                    </a>
+                  </div>
+                </div>
 
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -149,31 +251,38 @@
                   <table class="table m-0">
                     <thead>
                     <tr>
-                      <th>Carton Number</th>
-                      <th>WorkNo</th>
-                      <th>Status</th>
-                      <th>Quantity</th>
-                      <th>createTime</th>
-                      <th>updateTime</th>
+                      <th>装箱单号</th>
+                      <th>工单号</th>
+                      <th>状态</th>
+                      <th>包装类型</th>
+                      <th>数量</th>
+                      <th>创建时间</th>
+                      <th>更新时间</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${boxes}" var="box">
+                    <c:forEach items="${pageInfo.list}" var="box">
                       <tr>
-                      <td><a href="#">${box.cartonNo}</a></td>
+                      <td><a href="javascript:void(0)" onclick="queryDetail('${box.uuid}')">${box.cartonNo}</a></td>
                       <td>${box.workNo}</td>
                       <c:if test="${box.cartonStatus == 0}">
-                      <td><span class="badge badge-info">picked</span></td>
+                      <td><span class="badge badge-info">已装箱</span></td>
                       </c:if>
                       <c:if test="${box.cartonStatus == 1}">
-                        <td><span class="badge badge-primary">packed</span></td>
+                        <td><span class="badge badge-primary">已装栈板</span></td>
                       </c:if>
                       <c:if test="${box.cartonStatus == 2}">
-                        <td><span class="badge badge-secondary">received</span></td>
+                        <td><span class="badge badge-secondary">已入库</span></td>
                       </c:if>
                       <c:if test="${box.cartonStatus == 3}">
-                        <td><span class="badge badge-success">shipped</span></td>
+                        <td><span class="badge badge-success">已出货</span></td>
                       </c:if>
+                        <c:if test="${box.packType == 0}">
+                          <td><span class="badge badge-info">整机</span></td>
+                        </c:if>
+                        <c:if test="${box.packType == 1}">
+                          <td><span class="badge badge-success">单出件</span></td>
+                        </c:if>
                       <td>
                         <div class="sparkbar" data-color="#00a65a" data-height="20">${box.cartonQty}</div>
                       </td>
@@ -192,9 +301,36 @@
               </div>
               <!-- /.card-body -->
               <div class="card-footer clearfix">
-                <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Place New Boxes</a>
-                <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All Boxes</a>
+                <ul class="pagination pagination-sm m-0 float-right">
+                  <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/box/query.do?page=1&size=${pageInfo.pageSize}">首页</a></li>
+                  <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/box/query.do?page=${pageInfo.pageNum-1}&size=${pageInfo.pageSize}">上一页</a></li>
+                  <c:choose>
+                    <c:when test="${pageInfo.pages < 6}">
+                      <c:forEach begin="1" end="${pageInfo.pages}" var="pageNum" >
+                        <c:if test="${pageNum == pageInfo.pageNum}">
+                          <li class="page-item active"><a class="page-link" href="${pageContext.request.contextPath}/box/query.do?page=${pageNum}&size=${pageInfo.pageSize}">${pageNum}</a></li>
+                        </c:if>
+                        <c:if test="${pageNum != pageInfo.pageNum}">
+                          <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/box/query.do?page=${pageNum}&size=${pageInfo.pageSize}">${pageNum}</a></li>
+                        </c:if>
+                      </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                      <c:forEach begin="${pageInfo.pageNum -3 < 1 ? 1 : pageInfo.pageNum -3 }" end="${pageInfo.pageNum + 3 > pageInfo.pages ? pageInfo.pages : pageInfo.pageNum + 3}" var="pageNum" >
+                        <c:if test="${pageNum == pageInfo.pageNum}">
+                          <li class="page-item active"><a class="page-link" href="${pageContext.request.contextPath}/box/query.do?page=${pageNum}&size=${pageInfo.pageSize}">${pageNum}</a></li>
+                        </c:if>
+                        <c:if test="${pageNum != pageInfo.pageNum}">
+                          <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/box/query.do?page=${pageNum}&size=${pageInfo.pageSize}">${pageNum}</a></li>
+                        </c:if>
+                      </c:forEach>
+                    </c:otherwise>
+                  </c:choose>
+                  <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/box/query.do?page=${pageInfo.pageNum+1}&size=${pageInfo.pageSize}">下一页</a></li>
+                  <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/box/query.do?page=${pageInfo.pages}&size=${pageInfo.pageSize}">尾页</a></li>
+                </ul>
               </div>
+              <!-- /.card-footer -->
               <!-- /.card-footer -->
             </div>
             <!-- /.card -->
@@ -265,6 +401,145 @@
   <%@include file="../footer.jsp"%>
 </div>
 <!-- ./wrapper -->
+<script src="${pageContext.request.contextPath}/plugins/jquery/jquery.min.js"></script>
+<%--<script src="${pageContext.request.contextPath}/bootTree/js/jquery-2.1.0.min.js"></script>--%>
+<script src="${pageContext.request.contextPath}/bootTree/js/bootstrap-treeview.js"></script>
+<!-- Bootstrap 4 -->
+<script src="${pageContext.request.contextPath}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="${pageContext.request.contextPath}/plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- Toastr -->
+<script src="${pageContext.request.contextPath}/plugins/toastr/toastr.min.js"></script>
+<script>
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+  });
+  var jsonTree;
+  $(function () {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
+    $.ajax({
+      type: "post",
+      url: "${pageContext.request.contextPath}/department/deparmentTree.do",
+      success: function (data, status) {
+        if (status == "success") {
+          jsonTree = data;
+        }
+      },
+      error: function () {
+        toastr.error('Error');
+      },
+    });
+    $('#addBtn').click(function () {
+      console.log("进入了addBtn方法")
+      $.ajax({
+        url: '${pageContext.request.contextPath}/role/add.do',
+        data: $('#addUserForm').serialize(),           //序列化表单数据，格式为name=value
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+          console.log(data);
+          if (data.success) {
+            window.location.href = '${pageContext.request.contextPath}/role/query.do';
+          } else {
+            Toast.fire({
+              type: 'warning',
+              title: '保存失败,' + data.message
+            })
+          }
+        },
+        error: function () {
+          Toast.fire({
+            type: 'warning',
+            title: '保存Error'
+          })
+        }
 
+      })
+    })
+
+  });
+
+  function edit(uuid) {
+    $.ajax({
+      url: '${pageContext.request.contextPath}/role/find.do',
+      data: {'uuid': uuid},           //序列化表单数据，格式为name=value
+      type: 'GET',
+      dataType: 'json',
+      success: function (data) {
+        console.log(data);
+        if (data.success) {
+
+          console.log("success");
+        } else {
+          Toast.fire({
+            type: 'warning',
+            title: '保存失败,' + data.message
+          })
+        }
+      },
+      error: function () {
+        Toast.fire({
+          type: 'warning',
+          title: '保存Error'
+        })
+      }
+
+    })
+  }
+
+
+  function queryDetail(uuid) {
+    $.ajax({
+      url: '${pageContext.request.contextPath}/box/queryDetail.do',
+      data: {'uuid': uuid},           //序列化表单数据，格式为name=value
+      type: 'GET',
+      dataType: 'json',
+      success: function (data) {
+        if (data.success) {
+          var boxInfo = data.data;
+          $('#boxNo').val(boxInfo.cartonNo);
+          $('#cartonQty').val(boxInfo.cartonQty);
+          $('#workNo').val(boxInfo.workNo);
+          $('#cusPo').val(boxInfo.cusPo);
+          $('#cusName').val(boxInfo.cusName);
+          $('#delMatno').val(boxInfo.delMatno);
+          $('#soOrder').val(boxInfo.soOrder);
+          $('#vehicleNo').val(boxInfo.vehicleNo);
+          //拼接字符串innerHtml
+          var innerElement = '';
+          $('#detailBody').html('') ;
+          for (let ctcode of boxInfo.ctcodes) {
+            innerElement += '<tr><td>' + ctcode.ctNumber + '</td><td>' + ctcode.ruleNo + '</td><td>'  + ctcode.createBy+ '<br/><small>' + ctcode.createDate+ '</small></td><td>' + ctcode.updateBy+ '<br/><small>' + ctcode.updateDate+ '</small></td></tr>'
+        }
+          $('#detailBody').html(innerElement);
+          $('#modal-lg').modal();
+
+        } else {
+          Toast.fire({
+            type: 'warning',
+            title: '保存失败,' + data.message
+          })
+        }
+      },
+      error: function () {
+        Toast.fire({
+          type: 'warning',
+          title: '操作Error'
+        })
+      }
+
+    })
+  }
+
+
+</script>
 </body>
 </html>

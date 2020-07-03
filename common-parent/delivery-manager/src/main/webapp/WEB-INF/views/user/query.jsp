@@ -11,8 +11,16 @@
   <title>CHENBRO | Barcode</title>
   <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/barcode.ico" type="image/x-icon">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/bootTree/css/default.css">
-  <!-- iCheck for checkboxes and radio inputs -->
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/toastr/toastr.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/adminlte.min.css">
+  <!-- treeview -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/bootTree/css/bootstrap-treeview.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
@@ -29,7 +37,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">员工</h1>
+            <h1 class="m-0 text-dark">用户管理</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -44,25 +52,24 @@
     <!-- /.content-header -->
 
     <!-- /.modal -->
-
     <div class="modal fade" id="modal-lg">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">员工新增</h4>
+            <h4 class="modal-title">新增用户</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <form class="form-horizontal">
+            <form class="form-horizontal" id="addUserForm">
               <div class="card-body">
                 <div class="form-group row">
-                <label for="username" class="col-sm-2 col-form-label">用户名</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" name="username" id="username" placeholder="username">
+                  <label for="username" class="col-sm-2 col-form-label">用户名</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="username">
+                  </div>
                 </div>
-              </div>
                 <div class="form-group row">
                   <label for="workNumber" class="col-sm-2 col-form-label">工号</label>
                   <div class="col-sm-10">
@@ -72,7 +79,7 @@
                 <div class="form-group row">
                   <label for="email" class="col-sm-2 col-form-label">Email</label>
                   <div class="col-sm-10">
-                    <input type="email" class="form-control" id="email" placeholder="Email">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email">
                   </div>
                 </div>
                 <div class="form-group row">
@@ -84,20 +91,20 @@
                 <div class="form-group row">
                   <label for="mobile" class="col-sm-2 col-form-label">启用状态</label>
                   <div class="col-sm-10">
-                    <input type="checkbox" name="enableState" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                    <input type="checkbox" name="enableState" checked data-bootstrap-switch data-off-color="danger" value="1" data-on-color="success">
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="mobile" class="col-sm-2 col-form-label">性别</label>
                   <div class="col-sm-10">
                     <div class="icheck-primary d-inline">
-                      <input type="radio" id="radioPrimary1" name="gender" checked>
+                      <input type="radio" id="radioPrimary1" name="gender" value="1" checked>
                       <label for="radioPrimary1">
                         男
                       </label>
                     </div>
                     <div class="icheck-primary d-inline">
-                      <input type="radio" id="radioPrimary2" name="gender">
+                      <input type="radio" id="radioPrimary2" name="gender" value="0">
                       <label for="radioPrimary2">
                         女
                       </label>
@@ -105,10 +112,10 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="department" class="col-sm-2 col-form-label">部门</label>
+                  <label for="departmentName" class="col-sm-2 col-form-label">部门</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" name="department" id="department" readonly placeholder="部门选择" onclick="$('#treeview').show()">
-                    <input type="text" name="deparmentId" id="deparmentId" hidden>
+                    <input type="text" class="form-control" name="departmentName" id="departmentName" readonly placeholder="部门选择" onclick="$('#treeview').show()">
+                    <input type="text" name="departmentId" id="departmentId" hidden>
                     <div id="treeview" style="display: none"></div>
 
                   </div>
@@ -120,7 +127,7 @@
           </div>
           <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-primary">添加</button>
+            <button type="button" id="addBtn" class="btn btn-primary">添加</button>
           </div>
         </div>
         <!-- /.modal-content -->
@@ -130,23 +137,28 @@
 
     <!-- Main content -->
     <section class="content">
-
+<%--      <button class="btn btn-navbar" data-toggle="modal" data-target="#modal-lg"><i class="fas fa-file"></i>添加</button>--%>
       <!-- Default box -->
       <div class="card">
-          <div class="card-header">
-            <button class="btn btn-navbar" data-toggle="modal" data-target="#modal-lg"><i class="fas fa-file"></i>添加</button>
-          <div class="card-tools" >
-            <!-- SEARCH FORM -->
-            <form>
-              <div class="input-group input-group-sm">
-              <input class="form-control form-control-sm" type="search" placeholder="Search" aria-label="Search">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="input-group input-group-sm" style="width: 150px;">
+            <a class="btn btn-navbar" data-toggle="modal" data-target="#modal-lg">
+              <i class="fas fa-file"></i> 添加
+            </a>
+              <a class="btn btn-navbar" href="${pageContext.request.contextPath}/user/query.do">
+                <i class="fa fa-refresh"></i> 刷新
+              </a>
+            </div>
+          </div>
+          <div class="card-tools">
+            <div class="input-group input-group-sm" style="width: 150px;">
+              <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
               <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                  <i class="fas fa-search"></i>
-                </button>
+                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
               </div>
             </div>
-            </form>
           </div>
         </div>
         <div class="card-body p-0">
@@ -156,19 +168,19 @@
               <th style="width: 1%">
                 #
               </th>
-              <th style="width: 20%">
+              <th style="width: 10%">
                 工号
               </th>
-              <th style="width: 30%">
+              <th style="width: 10%">
                 用户名
               </th>
-              <th>
+              <th style="width: 10%">
                 电话
               </th>
-              <th style="width: 8%" class="text-center">
+              <th style="width: 10%" class="text-center">
                 启用状态
               </th>
-              <th style="width: 8%" class="text-center">
+              <th style="width: 10%">
                 部门
               </th>
               <th style="width: 20%">
@@ -193,7 +205,7 @@
                 <td>
                     ${user.username}
                 </td>
-                <td class="project_progress">
+                <td>
                     ${user.mobile}
                 </td>
                 <td class="project-state">
@@ -208,10 +220,11 @@
                     ${user.departmentName}
                 </td>
                 <td class="project-actions text-right">
-                  <a class="btn btn-primary btn-sm" href="#">
+                  <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/user/queryDetail.do?id=${user.uuid}">
                     <i class="fas fa-folder">
                     </i>
                     查看
+
                   </a>
                   <a class="btn btn-info btn-sm" href="#">
                     <i class="fas fa-pencil-alt">
@@ -274,11 +287,25 @@
   <%@include file="../footer.jsp"%>
 </div>
 <!-- ./wrapper -->
-<script src="${pageContext.request.contextPath}/bootTree/js/jquery-2.1.0.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="${pageContext.request.contextPath}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="${pageContext.request.contextPath}/plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- Toastr -->
+<script src="${pageContext.request.contextPath}/plugins/toastr/toastr.min.js"></script>
+<!-- select treeview -->
 <script src="${pageContext.request.contextPath}/bootTree/js/bootstrap-treeview.js"></script>
+<!-- bs-custom-file-input -->
+<script src="${pageContext.request.contextPath}/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 <script>
   var jsonTree;
   $(function() {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
     $.ajax({
       type : "post",
       url : "${pageContext.request.contextPath}/department/deparmentTree.do",
@@ -291,22 +318,46 @@
         toastr.error('Error');
       },
     });
+    $('#addBtn').click(function () {
+      $.ajax({
+        url:'${pageContext.request.contextPath}/user/add.do',
+        data:$('#addUserForm').serialize(),           //序列化表单数据，格式为name=value
+        type:'POST',
+        dataType:'json',
+        success:function (data) {
+          if(data.success){
+            window.location.href = '${pageContext.request.contextPath}/user/query.do';
+          }else{
+            Toast.fire({
+              type: 'warning',
+              title: data.message
+            })
+          }
+        },
+        error:function () {
+          Toast.fire({
+            type: 'warning',
+            title: '保存Error'
+          })
+        }
 
-    $('#department').click(function(){
+      })
+    })
+    $('#departmentName').click(function(){
       var options = {
         bootstrap2 : false,
         showTags : true,
         levels : 5,
         showCheckbox : true,
         color: "#428bca",
-        expandIcon: "glyphicon glyphicon-stop",
-        collapseIcon: "glyphicon glyphicon-unchecked",
-        nodeIcon: "glyphicon glyphicon-user",
+        expandIcon: "fas fa-plus",
+        collapseIcon: "fas fa-minus",
+        nodeIcon: "fas fa-user",
         data : jsonTree,
         onNodeSelected : function(event, data) {
-          $("#department").val(data.text);
-          $("#deparmentId").val(data.id);
-          console.log($("#deparmentId").val());
+          $("#departmentName").val(data.text);
+          $("#departmentId").val(data.id);
+          console.log($("#departmentId").val());
           $("#treeview").hide();
         }
       };
@@ -319,5 +370,4 @@
 
 </script>
 </body>
-
 </html>

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +23,10 @@ public class FilterChainDefinitionMapBuilder {
 
     public Map<String,String> builder(){
         Map<String,String> map = new LinkedHashMap<>();
-        return null;
+        List<HubResources> hubResources = hubResourcesService.selectAllSortAsc();
+        for(HubResources resource : hubResources){
+            map.put(resource.getResKey(),resource.getResValue());
+        }
+        return map;
     }
 }

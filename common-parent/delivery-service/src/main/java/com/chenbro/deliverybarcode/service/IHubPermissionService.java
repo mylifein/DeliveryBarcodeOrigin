@@ -13,7 +13,7 @@ public interface IHubPermissionService extends IBaseService<HubPermission> {
 
     List<HubPermission> findAll();
 
-    void save(Map<String,Object> map) throws Exception;
+    void save(Map<String,Object> map,String username) throws Exception;
 
     void updateByMap(Map<String,Object> map) throws Exception;
 
